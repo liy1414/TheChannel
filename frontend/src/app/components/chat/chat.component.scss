@@ -1,0 +1,17 @@
+nb-list-item {
+  border-bottom: 0 !important;
+  padding: 0 !important;
+}
+
+.scroll-arrow {
+  z-index: 999 !important;
+}
+
+nb-list-item:first-child {
+  border-top: 0 !important;
+}
+
+nb-card-header {
+  background-color: #444791;
+  color: white;
+}

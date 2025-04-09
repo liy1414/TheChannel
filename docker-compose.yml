@@ -1,0 +1,55 @@
+services:
+  redis:
+    image: apache/kvrocks
+    container_name: redis
+    restart: always
+    depends_on:
+      - caddy
+    user: root
+    command: -c /kvrocks.conf
+    volumes:
+      - ./data:/data
+      - ./redis_data:/var/lib/kvrocks
+      - ./kvrocks.conf:/kvrocks.conf
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    depends_on:
+      - redis
+    restart: always
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - DEFAULT_USER=${DEFAULT_USER}
+      - DEFAULT_PASSWORD=${DEFAULT_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - API_SECRET_KEY=${API_SECRET_KEY}
+      - REDIS_ADDR=${REDIS_ADDR}
+      - REDIS_PROTOCOL=${REDIS_PROTOCOL}
+      - DEFAULT_USERNAME=${DEFAULT_USERNAME}
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE}
+      - ROOT_STATIC_FOLDER=${ROOT_STATIC_FOLDER}
+    networks:
+      - app-network
+    volumes:
+      - ./channel_data:/app/files
+      - ./data:/app/data
+
+  caddy:
+    image: caddy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

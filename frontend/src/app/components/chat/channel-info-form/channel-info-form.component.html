@@ -1,0 +1,26 @@
+<nb-card>
+    <nb-card-body>
+        <img [src]="logoUrl" class="rounded-circle" (click)="fileInput.click()">
+        <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden>
+        <div class="m-2"></div>
+        <div style="width: 80svh;">
+            <h6>כותרת:</h6>
+            <input type="text" nbInput fullWidth [(ngModel)]="name">
+            <div class="m-2"></div>
+            <h6>תיאור:</h6>
+            <input type="text" nbInput fullWidth [(ngModel)]="description">
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="d-flex flex-row-reverse">
+            <div class="m-2"></div>
+            <button nbButton status="primary" shape="round" outline [nbSpinner]="isSending" [disabled]="isSending"
+                nbSpinnerStatus="primary" (click)="editChannelInfo()">עדכן
+            </button>
+            <div class="m-2"></div>
+            <button nbButton status="danger" shape="round" [disabled]="isSending || (attachment&&attachment.uploading)"
+                (click)="closeDialog()">ביטול
+            </button>
+        </div>
+    </nb-card-footer>
+</nb-card>
